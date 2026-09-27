@@ -27,12 +27,98 @@ namespace HackerRank
             int[] cloud = new int[] { 0, 0, 1, 0, 0, 1, 1, 0 };
             string s = "hackerhappy";
             string t = "hackerrank";
-            int result = Program.squares(17,24);
+            arr = new List<int> { 278, 576, 496, 727, 410, 124, 338, 149, 209, 702, 282, 718, 771, 575, 436 };
+            int result = Program.nonDivisibleSubset(10,arr);
 
-            //Console.WriteLine(string.Join(", ", result));
-            Console.WriteLine(result);
+            Console.WriteLine(string.Join(", ", result));
+            //Console.WriteLine(result);
 
         }
+        public static int nonDivisibleSubset(int k, List<int> numbers)
+        {
+            // Frequency array for remainders 0..k-1
+            var freq = new int[k];
+
+            // Count how many numbers fall into each remainder bucket
+            foreach (var num in numbers)
+            {
+                freq[num % k]++;
+            }
+
+            int result = 0;
+
+            // Remainder 0: only one allowed
+            if (freq[0] > 0)
+                result++;
+
+            // Process remainder pairs (i, k - i)
+            for (int i = 1; i <= k / 2; i++)
+            {
+                int opposite = k - i;
+
+                // Special case: when k is even and i == k/2
+                if (i == opposite)
+                {
+                    // Only one number with remainder k/2 can be included
+                    result += 1;
+                }
+                else
+                {
+                    // Choose the larger group between remainder i and remainder (k - i)
+                    result += Math.Max(freq[i], freq[opposite]);
+                }
+            }
+
+            return result;
+        }
+        public static List<int> cutTheSticks(List<int> arr)
+        {
+            int count = 0;
+            List<int> sticksHasbeenCut = new List<int>();
+            
+            for (int i = 0; i < arr.Count; i++)              
+            {
+                int min = arr.Where(x => x != 0)
+             .DefaultIfEmpty(int.MaxValue)
+             .Min();
+                for (int j = 0; j < arr.Count; j++)
+                {
+                    
+                    if (arr[j] >= min)
+                    {
+                        arr[j] -= min;
+                        count++;
+                    }
+                }
+                if (count != 0)
+                {
+                    sticksHasbeenCut.Add(count);
+                }
+               
+                count = 0;
+
+            }
+            return sticksHasbeenCut;
+        }
+
+        public static int libraryFine(int d1, int m1, int y1, int d2, int m2, int y2)
+        {
+            const int DAY_FINE = 15;
+            const int MONTH_FINE = 500;
+            const int YEAR_FINE = 10000;
+
+            if (y1 > y2)
+                return  YEAR_FINE;
+
+            if (y1 == y2 && m1 > m2)
+                return (m1 - m2) * MONTH_FINE;
+
+            if (y1 == y2 && m1 == m2 && d1 > d2)
+                return (d1 - d2) * DAY_FINE;
+
+            return 0;
+        }
+
         public static int squares(int a, int b)
         {
            
