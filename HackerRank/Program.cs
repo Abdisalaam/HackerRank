@@ -11,27 +11,183 @@ namespace HackerRank
     {
         static void Main(string[] args)
         {
-            List<int> PickingNumbersArray = new List<int> { 1, 1, 3, 4, 4, 5, 5, 6 };
+           
+            List<string> topics = new List<string> { "10101","11110", "00010" };
 
-            List<int> arr = new List<int> { 2, 4 };
-            List<int> heights = new List<int> { 2, 9, 4, 5, 2 };
-
-            List<int> brr = new List<int> { 16, 32, 96 };
-            List<int> ranked = new List<int> { 100, 100, 50, 40, 40, 20, 10 };
-            List<int> players = new List<int> { 5, 25, 50, 120 };
-            List<int> charHeights = new List<int> { 1, 3, 1, 3, 1, 4, 1, 3, 2, 5, 1, 2, 5, 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            List<int> arrivalTime = new List<int> { -1, -3, 4, 2 };
-            List<int> beautifullDaysParameter = new List<int> { 20, 23, 6 };
-            List<int> a = new List<int> { 10, 20, 30, 40 };
-            List<int> queries = new List<int> { 0,2 };
-            int[] cloud = new int[] { 0, 0, 1, 0, 0, 1, 1, 0 };
-            string s = "hackerhappy";
-            string t = "hackerrank";
-            arr = new List<int> { 278, 576, 496, 727, 410, 124, 338, 149, 209, 702, 282, 718, 771, 575, 436 };
-            int result = Program.nonDivisibleSubset(10,arr);
-
+            List<int> result = Program.acmTeam(topics);           
             Console.WriteLine(string.Join(", ", result));
-            //Console.WriteLine(result);
+            //Console.WriteLine(result);          
+
+        }
+        public static List<int> acmTeam(List<string> topic)
+        {
+            int maxTopics = 0;
+            int teamCount = 0;
+
+            // Compare every pair of people
+            for (int i = 0; i < topic.Count; i++)
+            {
+                for (int j = i + 1; j < topic.Count; j++)
+                {
+                    int knownTopics = 0;
+
+                    // Compare topic-by-topic
+                    for (int k = 0; k < topic[i].Length; k++)
+                    {
+                        // If either person knows the topic, the team knows it
+                        if (topic[i][k] == '1' || topic[j][k] == '1')
+                        {
+                            knownTopics++;
+                        }
+                    }
+                    // Update maximum and count
+                    if (knownTopics > maxTopics)
+                    {
+                        maxTopics = knownTopics;
+                        teamCount = 1;   // reset count because we found a new max
+                    }
+                    else if (knownTopics == maxTopics)
+                    {
+                        teamCount++;     // another team with same max
+                    }
+                }
+            }
+
+            return new List<int> { maxTopics, teamCount };
+        }
+        public static int queensAttack(int n, int NumberOfObsticals, int QueenRow, int QueenColoum, List<List<int>> obstacles)
+        {
+            // Maximum possible moves in each direction (no obstacles)
+            int up = n - QueenRow;
+            int down = QueenRow - 1;
+            int right = n - QueenColoum;
+            int left = QueenColoum - 1;
+
+            int diagnoalupLeft = Math.Min(up, left);
+            int diagnoalupRight = Math.Min(up, right);
+            int diagnoaldownLeft = Math.Min(down, left);
+            int diagnoaldownRight = Math.Min(down, right);
+
+            // Process obstacles
+            foreach (var obstacle in obstacles)
+            {
+                int ObstcalRow = obstacle[0];
+                int ObsticalCouloum = obstacle[1];
+
+                // Same column
+                if (ObsticalCouloum == QueenColoum)
+                {
+                    if (ObstcalRow > QueenRow)
+                    {
+                        
+                        up = Math.Min(up, ObstcalRow - QueenRow - 1); 
+                    }
+
+                    else
+                    { 
+                        down = Math.Min(down, QueenRow - ObstcalRow - 1); 
+                    }
+                }
+
+                // Same row
+                else if (ObstcalRow == QueenRow)
+                {
+                    if (ObsticalCouloum > QueenColoum)
+                    {
+                        right = Math.Min(right, ObsticalCouloum - QueenColoum - 1);
+                    }
+                    else
+                    { left = Math.Min(left, QueenColoum - ObsticalCouloum - 1); 
+                    }
+                }
+
+                // Diagonals
+                else if (Math.Abs(ObstcalRow - QueenRow) == Math.Abs(ObsticalCouloum - QueenColoum))
+                {
+                    // Up-left
+                    if (ObstcalRow > QueenRow && ObsticalCouloum < QueenColoum)
+                    {
+                        diagnoalupLeft = Math.Min(diagnoalupLeft, ObstcalRow - QueenRow - 1);
+                    }                       
+
+                    // Up-right
+                    else if (ObstcalRow > QueenRow && ObsticalCouloum > QueenColoum)
+                    {
+                        diagnoalupRight = Math.Min(diagnoalupRight, ObstcalRow - QueenRow - 1);
+                    }
+                        
+
+                    // Down-left
+                    else if (ObstcalRow < QueenRow && ObsticalCouloum < QueenColoum)
+                    {
+                        diagnoaldownLeft = Math.Min(diagnoaldownLeft, QueenRow - ObstcalRow - 1);
+                    }
+                       
+
+                    // Down-right
+                    else if (ObstcalRow < QueenRow && ObsticalCouloum > QueenColoum)
+                    {
+                        diagnoaldownRight = Math.Min(diagnoaldownRight, QueenRow - ObstcalRow - 1);
+                    }
+                        
+                }
+            }
+
+            return up + down + left + right + diagnoalupLeft + diagnoalupRight + diagnoaldownLeft + diagnoaldownRight;
+        }
+        public static int equalizeArray(List<int> arr)
+        {
+            var freq = new Dictionary<int, int>();
+            foreach (var num in arr)
+            {
+                if (!freq.ContainsKey(num))
+                { freq[num] = 1; }
+                else
+                {
+                    freq[num]++;
+                }                    
+            }
+            int maxFrequency = freq.Values.Max();
+            return arr.Count - maxFrequency;
+        }
+
+
+        public static int jumpingOnClouds(List<int> c)
+        {
+            int count = 0;           
+            for (int i = 0; i < c.Count - 1;)
+            {               
+                if (i + 2 < c.Count  && c[i + 2] == 0)
+                {
+                    i += 2;                   
+                }
+                else
+                {
+                    i += 1;                  
+
+                }
+                count++;
+            }           
+            return count;
+        }
+        public static long repeatedString(string s, long n)
+        {
+           
+            long length = s.Length;
+
+            long countInS = s.Count(c => c == 'a');
+            if (length == countInS)
+            {
+                return n;
+            }
+
+            long fullRepeats = n / length;
+
+            long remainder = n % length;
+
+            long countInRemainder = s.Substring(0, (int)remainder).Count(c => c == 'a');
+
+            return (fullRepeats * countInS) + countInRemainder;
 
         }
         public static int nonDivisibleSubset(int k, List<int> numbers)
@@ -139,9 +295,7 @@ namespace HackerRank
             int minLength = Math.Min(s.Length, t.Length);
 
             while (commonPrefix < minLength && s[commonPrefix] == t[commonPrefix])
-            {
-                char aas = s[commonPrefix];
-                char aat = t[commonPrefix];
+            {                
                 commonPrefix++;
             }
 
@@ -208,41 +362,24 @@ namespace HackerRank
             return allYs;
 
         }
-        public static List<int> circularArrayRotation(List<int> a, int k, List<int> queries)
+        public static List<int> circularArrayRotation(List<int> a, int k)
         {
-            List<int> bOld = new List<int>();
-            List<int> b = new List<int>();
-            int newIndex = 0;
-            int oldIndex = 0;
+            List<int> b = new List<int>();            
+           
             for (int i = 0; i < a.Count; i++)
             {
-                oldIndex = (i + k) % a.Count; // Move to left by k positions
-                newIndex = (i - k) % a.Count; // Move to right by k positions
-                // Adjust for negative indices
-                if (newIndex < 0)
+                int index = (a[i] - k) % a.Count;
+                if (index < 0)
                 {
-                    newIndex += a.Count;
-                }   
-                bOld.Add(a[oldIndex]);
-                b.Add(a[newIndex]);
+                    index += a.Count;
+                }
+                b.Add(a[index]);
             }
-            // Below is the original code that was commented out, which calculates the result based on the queries after rotation.
-            //for (int i = 0; i < queries.Count; i++)
-            //{
-
-            //    int index = (queries[i] - k) % a.Count;
-            //    if (index < 0)
-            //    {
-            //        index += a.Count;
-            //    }
-            //    b.Add(a[index]);
-            //}
-            return bOld;
+            return b;
         }
         public static int saveThePrisoner(int n, int m, int s)
         {
-            int prisoner = 0;
-            
+            int prisoner = 0;            
               int staringpoint = s;
                 for (int i = 1; i <= m; i++)
                 {
@@ -253,8 +390,7 @@ namespace HackerRank
                     }
                     prisoner = staringpoint;
                     staringpoint++;
-                }
-            
+                }            
             
             return prisoner;
             // below is the optimized solution
