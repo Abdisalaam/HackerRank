@@ -19,6 +19,27 @@ namespace HackerRank
             //Console.WriteLine(result);          
 
         }
+        public static long taumBday(int b, int w, int bc, int wc, int z)
+        {
+            long bcCost = 0;
+            long wcCost = 0;
+
+            if (bc > wc + z)
+            {
+                bcCost = wc + z;
+            }
+            else { bcCost = bc; }
+
+            if (wc > bc + z)
+            {
+                wcCost = bc + z;
+            }
+            else
+            {
+                wcCost = wc;
+            }
+                return (b * bcCost) + (w * wcCost);
+        }
         public static List<int> acmTeam(List<string> topic)
         {
             int maxTopics = 0;
