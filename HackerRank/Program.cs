@@ -4,21 +4,102 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HackerRank
 {
     internal class Program
     {
         static void Main(string[] args)
-        {
-           
-            List<string> topics = new List<string> { "10101","11110", "00010" };
-
-            List<int> result = Program.acmTeam(topics);           
-            Console.WriteLine(string.Join(", ", result));
-            //Console.WriteLine(result);          
+        {           
+            string input = "If man was meant to stay on the ground God would have given us roots";
+            string result = Program.encryption(input);           
+            //Console.WriteLine(string.Join(", ", result));
+            Console.WriteLine(result);          
 
         }
+
+        public static string encryption(string s)
+        {
+            
+            string text = s.Replace(" ", "");
+
+            int L = text.Length;
+
+           
+            double sqrt = Math.Sqrt(L);
+            int rows = (int)Math.Floor(sqrt);
+            int cols = (int)Math.Ceiling(sqrt);
+
+            if (rows * cols < L)
+                rows++;
+
+            
+            char[,] grid = new char[rows, cols];
+
+            int index = 0;
+
+            for (int r = 0; r < rows; r++)
+            {
+                for (int c = 0; c < cols; c++)
+                {
+                    if (index < L)
+                    {
+                        grid[r, c] = text[index];
+                        index++;
+                    }
+                }
+            }
+
+            
+            List<string> encryptedWords = new List<string>();
+
+            for (int c = 0; c < cols; c++)
+            {
+                string word = "";
+
+                for (int r = 0; r < rows; r++)
+                {
+                    if (grid[r, c] != '\0')  
+                    {
+                        word += grid[r, c];
+                    }
+                }
+
+                encryptedWords.Add(word);
+            }
+
+            // 5. Join with spaces
+            return string.Join(" ", encryptedWords);
+        }
+        public static string organizingContainers(List<List<int>> container)
+        {
+            string result = "Possible";
+            int n = container.Count;
+
+            // Prepare lists for row sums and column sums
+            List<int> sumOfContainer = new List<int>(new int[n]);
+            List<int> sumOfBallType = new List<int>(new int[n]);
+            for (int i = 0; i < container.Count(); i++) 
+            {
+                for (int j = 0; j < container[i].Count(); j++)
+                {
+                    sumOfContainer[i] += container[i][j];
+                    sumOfBallType[j] += container[i][j];
+                }               
+            }
+            sumOfContainer.Sort();
+            sumOfBallType.Sort();
+            for (int i = 0; i < container.Count(); i++)
+            {
+                if (sumOfContainer[i] != sumOfBallType[i])
+                {
+                    result = "Impossible";
+                }
+            }
+                return result;
+        }
+
         public static long taumBday(int b, int w, int bc, int wc, int z)
         {
             long bcCost = bc;
