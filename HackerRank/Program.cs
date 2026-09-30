@@ -12,12 +12,47 @@ namespace HackerRank
     {
         static void Main(string[] args)
         {           
-            string input = "If man was meant to stay on the ground God would have given us roots";
-            string result = Program.encryption(input);           
+            string input = "abefdc";
+            string result = Program.biggerIsGreater(input);           
             //Console.WriteLine(string.Join(", ", result));
             Console.WriteLine(result);          
 
         }
+
+        public static string biggerIsGreater(string w)
+        {
+            char[] arr = w.ToCharArray();
+            int n = arr.Length;
+
+            // Step 1: Find the pivot (rightmost char that is smaller than the next one)
+            int i = n - 2;            
+            while (i >= 0 && arr[i] >= arr[i + 1])
+            {
+                i--;
+            }
+
+            // If no pivot found → no larger permutation
+            if (i < 0)
+                return "no answer";
+
+            // Step 2: Find the rightmost successor (char just larger than arr[i])
+            int j = n - 1;
+
+            while (arr[j] <= arr[i])
+            {
+                j--;
+            }           
+            // Step 3: Swap pivot with successor
+            char temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+
+            // Step 4: Reverse the suffix (everything after pivot)
+            Array.Reverse(arr, i + 1, n - (i + 1));
+
+            return new string(arr);
+        }
+
 
         public static string encryption(string s)
         {
