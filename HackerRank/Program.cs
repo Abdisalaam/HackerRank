@@ -11,12 +11,152 @@ namespace HackerRank
     internal class Program
     {
         static void Main(string[] args)
-        {           
-            string input = "abefdc";
-            string result = Program.biggerIsGreater(input);           
+        {
+            int d = 3; 
+            List<int> arr = new List<int> (){ 1, 2, 4, 5, 7, 8, 10 };
+            List<int> a = new List<int>() { 3, 2, 1, 2, 3 };
+            int result = Program.howManyGames(20,3,6,80);           
             //Console.WriteLine(string.Join(", ", result));
-            Console.WriteLine(result);          
+            Console.WriteLine(result);        
 
+        }
+        public static string timeInWords(int h, int m)
+        {            
+            string[] hourWords =
+            {      
+                "", "one", "two", "three", "four", "five", "six",      
+                "seven", "eight", "nine", "ten", "eleven", "twelve"   
+            };           
+            string[] minuteWords =
+            {       
+                "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",        
+                "eleven", "twelve", "thirteen", "fourteen", "quarter", "sixteen", "seventeen", "eighteen",        
+                "nineteen", "twenty", "twenty one", "twenty two", "twenty three", "twenty four",       
+                "twenty five", "twenty six", "twenty seven", "twenty eight", "twenty nine"  
+            };
+            switch (m)
+            {
+                case 0: return $"{hourWords[h]} o' clock";
+                case 15: return $"quarter past {hourWords[h]}";
+                case 30: return $"half past {hourWords[h]}";
+                case 45: return $"quarter to {hourWords[h + 1]}";
+            }
+            if (m < 30)
+            {
+                string minuteWord = m == 1 ? "minute" : "minutes";
+                return $"{minuteWords[m]} {minuteWord} past {hourWords[h]}";
+            }
+            else
+            {
+                int remaining = 60 - m; 
+                string minuteWord = remaining == 1 ? "minute" : "minutes";
+                return $"{minuteWords[remaining]} {minuteWord} to {hourWords[h + 1]}";
+            }
+        }
+
+        public static int howManyGames(int p, int d, int m, int s)
+        {
+            int gamesBoughtCount = 0;
+            int sellingPrice = p;
+            int totalPrice = 0;
+            while (totalPrice + sellingPrice <= s)
+            {                
+                totalPrice += sellingPrice;                
+                sellingPrice = Math.Max(sellingPrice - d, m);
+                gamesBoughtCount++;
+            }
+            return gamesBoughtCount;
+
+        }
+        public static int minimumDistances(List<int> a)
+        {
+            
+            Dictionary<int, int> lastIndex = new Dictionary<int, int>();
+            int minimal = int.MaxValue;
+
+            for (int i = 0; i < a.Count; i++)
+            {
+                int value = a[i];
+
+                if (lastIndex.ContainsKey(value))
+                {
+                    minimal = Math.Min(minimal, i - lastIndex[value]);
+                }
+
+                lastIndex[value] = i;
+            }
+
+            return minimal == int.MaxValue ? -1 : minimal;
+        }
+        public static int beautifulTriplets(int d, List<int> arr)
+        {
+            HashSet<int> set = new HashSet<int>(arr);
+            int count = 0;
+
+            foreach (int x in arr)
+            {
+                if (set.Contains(x + d) && set.Contains(x + 2 * d))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        public static void kaprekarNumbers(int p, int q)
+        {
+            List<int> result = new List<int>();
+            for (int i = p; i <= q; i++)
+            {
+                long square = (long)i * i;
+                string s = square.ToString();
+
+                int d = i.ToString().Length;          // number of digits of n
+                int splitPos = s.Length - d;          // right part has d digits
+
+                string left = splitPos <= 0 ? "0" : s.Substring(0, splitPos);
+                string right = s.Substring(splitPos);
+
+                long leftNum = Convert.ToInt64(left);
+                long rightNum = Convert.ToInt64(right);
+
+                if (leftNum + rightNum == i)
+                {
+                    result.Add(i);
+                }
+            }
+            Console.WriteLine(string.Join(" ", result));
+        }
+        public static int hourglassSum(List<List<int>> arr)
+        {
+            int maxSum = int.MinValue;
+
+            // Loop through all valid hourglass starting positions
+            for (int row = 0; row <= 3; row++)
+            {
+                for (int col = 0; col <= 3; col++)
+                {
+                    int sum =
+                        arr[row][col] + arr[row][col + 1] + arr[row][col + 2] +
+                                           arr[row + 1][col + 1] +
+                        arr[row + 2][col] + arr[row + 2][col + 1] + arr[row + 2][col + 2];
+
+                    maxSum = Math.Max(maxSum, sum);
+                }
+            }
+            return maxSum;
+        }
+
+        public static List<int> reverseArray(List<int> a)
+        {
+            List<int> reversedArray = new List<int>();
+            for (int i = 0; i < a.Count; i++)
+            {
+                int index = (a.Count - 1 - i + a.Count) % a.Count;               
+                reversedArray.Add(a[index]);
+            }
+            return reversedArray;
         }
 
         public static string biggerIsGreater(string w)
@@ -46,10 +186,8 @@ namespace HackerRank
             char temp = arr[i];
             arr[i] = arr[j];
             arr[j] = temp;
-
             // Step 4: Reverse the suffix (everything after pivot)
             Array.Reverse(arr, i + 1, n - (i + 1));
-
             return new string(arr);
         }
 
