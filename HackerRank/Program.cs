@@ -12,13 +12,24 @@ namespace HackerRank
     {
         static void Main(string[] args)
         {
-            int d = 3; 
-            List<int> arr = new List<int> (){ 1, 2, 4, 5, 7, 8, 10 };
-            List<int> a = new List<int>() { 3, 2, 1, 2, 3 };
-            int result = Program.howManyGames(20,3,6,80);           
+            
+            int result = Program.chocolateFeast(6,2,2);           
             //Console.WriteLine(string.Join(", ", result));
             Console.WriteLine(result);        
 
+        }
+        public static int chocolateFeast(int n, int c, int m)
+        {
+            int chocolates = n / c;
+            int wrappers = chocolates;
+
+            while (wrappers >= m)
+            {
+                int newChocolates = wrappers / m;
+                chocolates += newChocolates;
+                wrappers = newChocolates + (wrappers % m);
+            }
+            return chocolates;
         }
         public static string timeInWords(int h, int m)
         {            
